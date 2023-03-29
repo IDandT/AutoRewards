@@ -1,13 +1,8 @@
-﻿using System;
-using System.Threading;
-
-
-
-namespace AutoRewards
+﻿namespace AutoRewards
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
 
             char letter;
@@ -20,7 +15,6 @@ namespace AutoRewards
 
             // Dektop points
             BingSearcher.GetPoints(false, letter);
-
 
         }
     }
