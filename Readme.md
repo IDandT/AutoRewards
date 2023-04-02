@@ -15,6 +15,7 @@ To run the program, you will need to adjust the following settings in app.config
     <add key="PointsBySearch" value="3"/>
     <add key="TotalDesktopPoints" value="90"/>
     <add key="TotalMobilePoints" value="60"/>
+    <add key="TotalEdgePoints" value="12"/>
   </appSettings>
 ```
 
