@@ -5,7 +5,7 @@ using System.Configuration;
 
 namespace AutoRewards
 {
-    class BingSearcher
+    class ChromeBingSearcher
     {
         public static void GetPoints(bool mobile, char letter)
         {

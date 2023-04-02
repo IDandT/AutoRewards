@@ -10,11 +10,14 @@
             // Every day, one different letter (second char of day name).
             letter = DateTime.Today.DayOfWeek.ToString().ToUpper()[1];
 
+            // Edge desktop points
+            EdgeBingSearcher.GetPoints(letter);
+
             // Mobile points
-            BingSearcher.GetPoints(true, letter);
+            ChromeBingSearcher.GetPoints(true, letter);
 
             // Dektop points
-            BingSearcher.GetPoints(false, letter);
+            ChromeBingSearcher.GetPoints(false, letter);
 
         }
     }

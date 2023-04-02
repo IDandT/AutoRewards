@@ -1,8 +1,7 @@
 
 # AutoRewards
 
-Program to do searches for Microsoft Rewards in Bing (via Chrome) automatically.
-
+Program to do searches for Microsoft Rewards in Bing automatically.
 
 
 ## Configuration parameters
@@ -12,6 +11,7 @@ To run the program, you will need to adjust the following settings in app.config
 ```
   <appSettings>
     <add key="ChromeUserDataDir" value="C:\Users\IDandT\AppData\Local\Google\Chrome\User Data"/>
+    <add key="EdgeUserDataDir" value="C:\Users\IDandT\AppData\Local\Microsoft\Edge\User Data"/>
     <add key="PointsBySearch" value="3"/>
     <add key="TotalDesktopPoints" value="90"/>
     <add key="TotalMobilePoints" value="60"/>
@@ -23,30 +23,51 @@ To run the program, you will need to adjust the following settings in app.config
 
 Project solution has been upgraded to Visual Studio 2022 and targets .NET 7.0.
 
-The program uses "Selenium.WebDriver" to automate Chrome browser.
+The program uses "Selenium.WebDriver" to automate browsers.
 
-If Chrome updates to new version that breaks compatibility, may be you need to update Nuget reference and recompile project.
+Assumed that you are logged in your microsoft account from both browsers. That is... when you go to rewards page, you can see your name and point balance on top.
 
-I don't included the Edge browser searches, but you are free to add code for do it.
+### NOTE: 
 
-For chrome i used:
+In rewards are 3 types of searches to accomplish:
 
-```
-using OpenQA.Selenium.Chrome
-```
+-- Desktop
+-- Mobile
+-- Edge
 
-For Edge should be easy using Edge import:
+My first version only addressed desktop and mobile searches using Chrome. The 4 searches with Edge were done manually by me.
 
-```
-using OpenQA.Selenium.Edge;
-```
+Because that, i used initially Chrome to do job but finally i have included the Edge searches. 
+
+In order not to throw away the code that I already had, i have kept what was already done with Chrome, and added the code for Edge.
+
+In this way, **two browsers are being used**, although the ideal is to do everything with Edge now (only with Chrome you can't accomplish all three objectives).
+
+In addition, having the code of both can be interesting for someone, although they are practically the same.
+
+Anyway, the code is super simple and you can modify it to do everything with Edge, remove the Chrome part, or do what you want.
+
+
+### NOTE 2: 
+
+If Chrome/Edge updates to new version that breaks compatibility, may be you need to update Nuget reference and recompile project.
 
 
 ## Support
 
-Console window may show some errors about USB devices and others while runing . It's ok, and not inferfers with normal execution of program.
+Console window may show some like that while running:
+
+```
+ERROR:device_event_log_impl.cc
+
+ERROR:fallback_task_provider.cc
+
+...
+```
+
+It's ok, and not inferfers with normal execution of program.
 
 If program crashes, try to update "Selenium.WebDriver" Nuget package and recompile project.
 
-If program works but your points don't increases, try to login in your microsoft account previously to execute program.
+If program works but your points don't increases, try to login in your microsoft account from both browsers, previously to execute program.
 
