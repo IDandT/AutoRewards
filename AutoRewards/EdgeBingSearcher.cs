@@ -17,6 +17,7 @@ namespace AutoRewards
             options.AddArgument($"user-data-dir={userDataDir}");
             options.AddArgument("profile-directory=Default");
             options.AddArgument("--start-maximized");
+            options.AddArgument("--ignore-certificate-errors");
             options.AddUserProfilePreference("profile.cookie_controls_mode", 1);    //Allow 3rd party cookies
 
             EdgeDriver driver = new(options);
