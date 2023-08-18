@@ -33,7 +33,16 @@ namespace AutoRewards
                 options.EnableMobileEmulation(CMEDS);
             }
 
-            ChromeDriver driver = new(options);
+            ChromeDriver? driver = null;
+            while (driver == null)
+            {
+                driver = new ChromeDriver(options);
+                if (driver == null)
+                {
+                    Console.WriteLine("ERROR: Create ChromeDriver fails.. Retry...");
+                    Thread.Sleep(1000);
+                }
+            }
 
             int pointsToReach;
 
@@ -57,24 +66,30 @@ namespace AutoRewards
                 String searchString;
                 searchString = fullSearhString[..i];
 
-                //Console.WriteLine(searchString);
+            Retry:
 
-                driver.Url = "https://www.bing.com/";
-                Thread.Sleep(500);
+                Console.WriteLine($"Search #{searchesToDo - i + 1}/{searchesToDo}:  {searchString}");
 
-                driver.FindElement(By.Id("sb_form_q")).Click();
-                driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
-                driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
-                driver.FindElement(By.Id("sb_form")).Submit();
+                try
+                {
+                    driver.Navigate().GoToUrl("https://www.bing.com/");
 
-                Thread.Sleep(500);
+                    driver.FindElement(By.Id("sb_form_q")).Click();
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
+                    //driver.FindElement(By.Id("sb_form")).Submit();
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Enter);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"ERROR: {e}");
+                    Console.WriteLine("Retry search...");
+                    goto Retry;
+                }
             }
 
             driver.Close();
             driver.Dispose();
-
         }
-
-
     }
 }

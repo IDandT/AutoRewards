@@ -20,7 +20,16 @@ namespace AutoRewards
             options.AddArgument("--ignore-certificate-errors");
             options.AddUserProfilePreference("profile.cookie_controls_mode", 1);    //Allow 3rd party cookies
 
-            EdgeDriver driver = new(options);
+            EdgeDriver? driver = null;
+            while (driver == null)
+            {
+                driver = new EdgeDriver(options);
+                if (driver == null)
+                {
+                    Console.WriteLine("ERROR: Create EdgeDriver fails.. Retry...");
+                    Thread.Sleep(1000);
+                }
+            }
 
             int pointsToReach = totalEdgePoints;
 
@@ -35,22 +44,30 @@ namespace AutoRewards
                 String searchString;
                 searchString = String.Concat("EDGE", fullSearhString[..i]);
 
-                //Console.WriteLine(searchString);
+            Retry:
 
-                driver.Url = "https://www.bing.com/";
-                Thread.Sleep(500);
+                Console.WriteLine($"Search #{searchesToDo - i + 1}/{searchesToDo}:  {searchString}");
 
-                driver.FindElement(By.Id("sb_form_q")).Click();
-                driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
-                driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
-                driver.FindElement(By.Id("sb_form")).Submit();
+                try
+                {
+                    driver.Navigate().GoToUrl("https://www.bing.com/");
 
-                Thread.Sleep(500);
+                    driver.FindElement(By.Id("sb_form_q")).Click();
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
+                    //driver.FindElement(By.Id("sb_form")).Submit();
+                    driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Enter);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"ERROR: {e}");
+                    Console.WriteLine("Retry search...");
+                    goto Retry;
+                }
             }
 
             driver.Close();
             driver.Dispose();
-
         }
     }
 }
