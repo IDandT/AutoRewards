@@ -61,6 +61,7 @@ namespace AutoRewards
                     Task search = Task.Run(() =>
                     {
                         driver.Navigate().GoToUrl("https://www.bing.com/");
+                        Thread.Sleep(100);
                         driver.FindElement(By.Id("sb_form_q")).Click();
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
