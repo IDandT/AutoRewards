@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -28,6 +30,7 @@ namespace AutoRewards
             foreach (Process p in Process.GetProcessesByName("msedge")) p.Kill();
 
             EdgeDriver? driver = null;
+            WebDriverWait? wait = null;
             while (driver == null)
             {
                 driver = new EdgeDriver(options);
@@ -37,6 +40,7 @@ namespace AutoRewards
                     Thread.Sleep(1000);
                 }
             }
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
 
 
             int pointsToReach = totalEdgePoints;
@@ -61,7 +65,9 @@ namespace AutoRewards
                     Task search = Task.Run(() =>
                     {
                         driver.Navigate().GoToUrl("https://www.bing.com/");
-                        Thread.Sleep(100);
+
+                        wait.Until(ExpectedConditions.ElementIsVisible(By.Id("sb_form_q")));
+
                         driver.FindElement(By.Id("sb_form_q")).Click();
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
@@ -84,6 +90,7 @@ namespace AutoRewards
                     foreach (Process p in Process.GetProcessesByName("msedge")) p.Kill();
 
                     driver = null;
+                    wait = null;
 
                     while (driver == null)
                     {
@@ -94,6 +101,7 @@ namespace AutoRewards
                             Thread.Sleep(1000);
                         }
                     }
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
 
                     goto Retry;
                 }

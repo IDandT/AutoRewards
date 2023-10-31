@@ -1,6 +1,8 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Chromium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -42,6 +44,8 @@ namespace AutoRewards
             foreach (Process p in Process.GetProcessesByName("chrome")) p.Kill();
 
             ChromeDriver? driver = null;
+            WebDriverWait? wait = null;
+
             while (driver == null)
             {
                 driver = new ChromeDriver(options);
@@ -51,6 +55,7 @@ namespace AutoRewards
                     Thread.Sleep(1000);
                 }
             }
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
 
 
             int pointsToReach;
@@ -84,7 +89,9 @@ namespace AutoRewards
                     Task search = Task.Run(() =>
                     {
                         driver.Navigate().GoToUrl("https://www.bing.com/");
-                        Thread.Sleep(100);
+
+                        wait.Until(ExpectedConditions.ElementIsVisible(By.Id("sb_form_q")));
+
                         driver.FindElement(By.Id("sb_form_q")).Click();
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
@@ -107,6 +114,7 @@ namespace AutoRewards
                     foreach (Process p in Process.GetProcessesByName("chrome")) p.Kill();
 
                     driver = null;
+                    wait = null;
 
                     while (driver == null)
                     {
@@ -117,6 +125,7 @@ namespace AutoRewards
                             Thread.Sleep(1000);
                         }
                     }
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
 
                     goto Retry;
                 }
