@@ -97,6 +97,8 @@ namespace AutoRewards
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Delete);
                         driver.FindElement(By.Id("sb_form")).Submit();
                         //driver.FindElement(By.Id("sb_form_q")).SendKeys(Keys.Enter);
+
+                        wait.Until(ExpectedConditions.ElementIsVisible(By.Id("sb_form_q")));
                     });
 
                     if (search.Wait(TimeSpan.FromSeconds(timeout)))
