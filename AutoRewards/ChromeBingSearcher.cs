@@ -55,7 +55,7 @@ namespace AutoRewards
                     Thread.Sleep(1000);
                 }
             }
-            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+            wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
 
             int pointsToReach;
@@ -91,6 +91,7 @@ namespace AutoRewards
                         driver.Navigate().GoToUrl("https://www.bing.com/");
 
                         wait.Until(ExpectedConditions.ElementIsVisible(By.Id("sb_form_q")));
+                        wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("sb_form_q")));
 
                         driver.FindElement(By.Id("sb_form_q")).Click();
                         driver.FindElement(By.Id("sb_form_q")).SendKeys(searchString);
@@ -127,7 +128,7 @@ namespace AutoRewards
                             Thread.Sleep(1000);
                         }
                     }
-                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(2));
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
                     goto Retry;
                 }
