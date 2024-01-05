@@ -12,14 +12,47 @@ To run the program, you will need to adjust the following settings in app.config
   <appSettings>
     <add key="ChromeUserDataDir" value="C:\Users\IDandT\AppData\Local\Google\Chrome\User Data"/>
     <add key="EdgeUserDataDir" value="C:\Users\IDandT\AppData\Local\Microsoft\Edge\User Data"/>
-    <add key="PointsBySearch" value="3"/>
-    <add key="TotalDesktopPoints" value="90"/>
-    <add key="TotalMobilePoints" value="60"/>
-    <add key="TotalEdgePoints" value="12"/>
     <add key="LogLevel" value="3"/>
     <add key="Timeout" value="10"/>
   </appSettings>
 ```
+
+## Program execution
+
+AutoRewards is a console program. To run it, just invoke from console, using following arguments:
+
+```
+Supported browsers:
+        --chrome        Use Chrome browser
+        --edge          Use Edge browser
+
+Supported search types:
+        --mobile        Emulate mobile mode
+        --desktop       Normal desktop mode
+
+Other arguments:
+        --count N       The number of sarches to do (example: --count 5)
+        --help          Show this help
+```
+
+For 2024, Microsoft added to Bing system rewards a cooldown period, where only counts 3 searches every 15 minutes.
+
+With this, you can schedule searches at windows task scheduler, to do, for example, 3 or 4 searches every 20 minutes.
+
+Example:
+
+```
+AutoRewards --edge -mobile --count 3
+```
+
+### Very Important: 
+
+Scheduling for example 3 mobile searches and 3 desktop searches, one just after another, probably not work for desktop, 
+because the mobile searches reset cooldown time (independent of if you win points or not).
+
+Be carefully with that. 
+
+Yo can schedule --mobile at day, and -desktop at afternoon for example to avoid collisions.
 
 
 ## Release notes
@@ -30,22 +63,8 @@ The program uses "Selenium.WebDriver" to automate browsers.
 
 Assumed that you are logged in your microsoft account from both browsers. That is... when you go to rewards page, you can see your name and point balance on top.
 
-### NOTE: 
 
-In rewards are 3 types of searches to accomplish:
-
--- Desktop
--- Mobile
--- Edge
-
-In this way, **two browsers are being used**, although the ideal is to do everything with Edge now (only with Chrome you can't accomplish all three objectives).
-
-Having the code for both can be interesting for someone, although they are practically the same.
-
-Anyway, the code is super simple and you can modify it to do everything with Edge, remove the Chrome part, or do what you want.
-
-
-### NOTE 2: 
+### Important:
 
 If Chrome/Edge updates to new version that breaks compatibility, may be you need to update Nuget reference and recompile project.
 
@@ -68,5 +87,15 @@ Anyway, is ok, and not inferfers with normal execution of program.
 
 If program crashes, try to update "Selenium.WebDriver" Nuget package and recompile project.
 
-If program works but your points don't increases, try to login in your microsoft account from both browsers, previously to execute program.
+If program works but your points don't increases:
+
+- Try to login in your microsoft account from both browsers, previously to execute program.
+- Keep in mind the cooldown time every searches (just now, 3 searches every 15 minutes).
+- Keep in ming the "Very Important" point at "Program execution" section.
+
+
+
+Thanks!!
+
+IDandT
 

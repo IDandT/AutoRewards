@@ -10,14 +10,14 @@ namespace AutoRewards
 {
     class ChromeBingSearcher
     {
-        public static void GetPoints(bool mobile, char letter)
+        public static void GetPoints(SearchType? searchType, int? searchesToDo)
         {
+            Console.WriteLine("Search mode: CHROME + {0}", searchType == SearchType.Mobile ? "MOBILE" : "DESKTOP");
+
             string userDataDir = ConfigurationManager.AppSettings["ChromeUserDataDir"] ?? "";
-            int pointsBySearch = Int32.Parse(ConfigurationManager.AppSettings["PointsBySearch"] ?? "3");
-            int totalMobilePoints = Int32.Parse(ConfigurationManager.AppSettings["TotalMobilePoints"] ?? "60");
-            int totalDesktopPoints = Int32.Parse(ConfigurationManager.AppSettings["TotalDesktopPoints"] ?? "90");
             int logLevel = Int32.Parse(ConfigurationManager.AppSettings["LogLevel"] ?? "3");
             int timeout = Int32.Parse(ConfigurationManager.AppSettings["Timeout"] ?? "30");
+            int pauseBetweenSearches = Int32.Parse(ConfigurationManager.AppSettings["PauseBetweenSearches"] ?? "0");
 
             ChromeOptions options = new();
             options.AddArgument($"user-data-dir={userDataDir}");
@@ -28,19 +28,20 @@ namespace AutoRewards
             options.AddArgument("--no-sandbox");
             options.AddUserProfilePreference("profile.cookie_controls_mode", 1);    //Allow 3rd party cookies
 
-            if (mobile)
+            if (searchType == SearchType.Mobile)
             {
-                ChromiumMobileEmulationDeviceSettings CMEDS = new()
+                ChromiumMobileEmulationDeviceSettings mobileSettings = new()
                 {
                     Width = 1280,
                     Height = 720,
                     PixelRatio = 1.0,
-                    UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
+                    UserAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
                 };
-                options.EnableMobileEmulation(CMEDS);
+                options.EnableMobileEmulation(mobileSettings);
+                Console.WriteLine("Mobile emulation ON");
             }
 
-            // Kill al browser processes
+            // Kill al browser instances
             foreach (Process p in Process.GetProcessesByName("chrome")) p.Kill();
 
             ChromeDriver? driver = null;
@@ -58,31 +59,15 @@ namespace AutoRewards
             wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
 
-            int pointsToReach;
-
-            if (mobile)
+            // Search loop
+            for (int i = 1; i <= searchesToDo; i++)
             {
-                pointsToReach = totalMobilePoints;
-            }
-            else
-            {
-                pointsToReach = totalDesktopPoints;
-            }
-
-            int searchesToDo = pointsToReach / pointsBySearch;
-
-            String fullSearhString = new(letter, searchesToDo + 1);
-
-            //searchesToDo = 1;
-
-            for (int i = searchesToDo; i > 0; i--)
-            {
-                String searchString;
-                searchString = fullSearhString[..i];
+                // We use random GUID as search string
+                String searchString = Guid.NewGuid().ToString("N");
 
             Retry:
 
-                Console.WriteLine($"Search #{searchesToDo - i + 1}/{searchesToDo}:  {searchString}");
+                Console.WriteLine($"Search #{i}/{searchesToDo}:  {searchString}");
 
                 try
                 {
@@ -103,7 +88,12 @@ namespace AutoRewards
                     });
 
                     if (search.Wait(TimeSpan.FromSeconds(timeout)))
+                    {
+                        // We have to wait 5 seconds between searches (Dic 2023)
+                        Thread.Sleep(pauseBetweenSearches);
+
                         continue;
+                    }
                     else
                         throw new Exception($"Max timeout exceeded ({timeout} seconds)");
                 }
@@ -113,8 +103,11 @@ namespace AutoRewards
                     Console.WriteLine("Retry search...");
                     Console.WriteLine("Creating new driver instance...");
 
-                    // Kill al browser processes
+                    // Kill al browser instances
                     foreach (Process p in Process.GetProcessesByName("chrome")) p.Kill();
+
+                    // End current driver session
+                    driver.Quit();
 
                     driver = null;
                     wait = null;
@@ -124,7 +117,7 @@ namespace AutoRewards
                         driver = new ChromeDriver(options);
                         if (driver == null)
                         {
-                            Console.WriteLine("ERROR: Create driver fails.. Retry...");
+                            Console.WriteLine("ERROR: Create ChromeDriver fails.. Retry...");
                             Thread.Sleep(1000);
                         }
                     }
@@ -134,8 +127,7 @@ namespace AutoRewards
                 }
             }
 
-            driver.Close();
-            driver.Dispose();
+            driver.Quit();
         }
     }
 }
