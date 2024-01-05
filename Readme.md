@@ -21,7 +21,7 @@ To run the program, you will need to adjust the following settings in app.config
   </appSettings>
 ```
 
-First two not need explanation.
+First two not need explanation. Only change your user name, and check that letter unit (C:) and rest of full path it is correct.
 
 - "LogLevel": This value is for browser logging to console. With 3, most unnecessary traces are avoided. 
 - "Timeout": The time (in seconds) before a search is considered failed. Program will abort and retry the search.
