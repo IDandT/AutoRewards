@@ -1,7 +1,10 @@
-
 # AutoRewards
 
 Program to do searches for Microsoft Rewards in Bing automatically.
+
+The program launches a browser, navigates to bing site and does the specified number of searches.
+
+For each search it generates unique string (something like this: "21c63e3344ea4f3497159c430a45318a").
 
 
 ## Configuration parameters
