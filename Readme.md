@@ -1,4 +1,4 @@
-# AutoRewards
+# AutoRewardsº
 
 Program to do searches for Microsoft Rewards in Bing automatically.
 
@@ -16,9 +16,16 @@ To run the program, you will need to adjust the following settings in app.config
     <add key="ChromeUserDataDir" value="C:\Users\IDandT\AppData\Local\Google\Chrome\User Data"/>
     <add key="EdgeUserDataDir" value="C:\Users\IDandT\AppData\Local\Microsoft\Edge\User Data"/>
     <add key="LogLevel" value="3"/>
-    <add key="Timeout" value="10"/>
+    <add key="Timeout" value="15"/>
+    <add key="PauseBetweenSearches" value="5000"/>
   </appSettings>
 ```
+
+First two not need explanation.
+
+- "LogLevel": This value is for browser logging to console. With 3, most unnecessary traces are avoided. 
+- "Timeout": The time (in seconds) before a search is considered failed. Program will abort and retry the search.
+- "PauseBetweenSearches": The time (in milliseconds) between searches. Microsoft added a cooldown time between them. At this moment 5 seconds works for me.
 
 ## Program execution
 
