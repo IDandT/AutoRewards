@@ -1,11 +1,10 @@
-# AutoRewardsº
+# AutoRewards
 
 Program to do searches for Microsoft Rewards in Bing automatically.
 
 The program launches a browser, navigates to bing site and does the specified number of searches.
 
 For each search it generates unique string (something like this: "21c63e3344ea4f3497159c430a45318a").
-
 
 ## Configuration parameters
 
@@ -23,7 +22,7 @@ To run the program, you will need to adjust the following settings in app.config
 
 First two not need explanation. Only change your user name, and check that letter unit (C:) and rest of full path it is correct.
 
-- "LogLevel": This value is for browser logging to console. With 3, most unnecessary traces are avoided. 
+- "LogLevel": This value is for browser logging to console. With 3, most unnecessary traces are avoided.
 - "Timeout": The time (in seconds) before a search is considered failed. Program will abort and retry the search.
 - "PauseBetweenSearches": The time (in milliseconds) between searches. Microsoft added a cooldown time between them. At this moment 5 seconds works for me.
 
@@ -55,15 +54,14 @@ Example:
 AutoRewards --edge -mobile --count 3
 ```
 
-### Very Important: 
+### Very Important:
 
-Scheduling for example 3 mobile searches and 3 desktop searches, one just after another, probably not work for desktop, 
+Scheduling for example 3 mobile searches and 3 desktop searches, one just after another, probably not work for desktop,
 because the mobile searches reset cooldown time (independent of if you win points or not).
 
-Be carefully with that. 
+Be carefully with that.
 
 Yo can schedule --mobile at day, and -desktop at afternoon for example to avoid collisions.
-
 
 ## Release notes
 
@@ -73,15 +71,13 @@ The program uses "Selenium.WebDriver" to automate browsers.
 
 Assumed that you are logged in your microsoft account from both browsers. That is... when you go to rewards page, you can see your name and point balance on top.
 
-
 ### Important:
 
 If Chrome/Edge updates to new version that breaks compatibility, may be you need to update Nuget reference and recompile project.
 
-
 ## Support
 
-Console window may show some like that while running. 
+Console window may show some like that while running.
 
 The parameter "LogLevel" established to "3" should avoid most of this traces.
 
@@ -103,9 +99,6 @@ If program works but your points don't increases:
 - Keep in mind the cooldown time every searches (just now, 3 searches every 15 minutes).
 - Keep in ming the "Very Important" point at "Program execution" section.
 
-
-
 Thanks!!
 
 IDandT
-
